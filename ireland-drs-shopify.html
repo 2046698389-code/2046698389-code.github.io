@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ireland DRS on Shopify: what to charge, how to refund, how to report</title>
+<meta name="description" content="Ireland deposit return on Shopify: the Re-turn rate per container, a separate non-taxable cart line, refunds by quantity against the original order, and a month-end ledger your accountant can read.">
+<link rel="canonical" href="https://2046698389-code.github.io/ireland-drs-shopify">
+<link rel="stylesheet" href="/styles.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Do I need Shopify Plus to charge an Irish bottle deposit?","acceptedAnswer":{"@type":"Answer","text":"No. A deposit added as a cart line works on Basic, Shopify and Advanced, and it carries through to the order and the refund. A native custom line rendered inside checkout requires Plus and a checkout UI extension, which is a different mechanism doing a different job."}},
+{"@type":"Question","name":"How do I refund a deposit when a customer brings back four of six bottles?","acceptedAnswer":{"@type":"Answer","text":"Refund the deposit line only, with quantity set to four, at the rate that was charged on the original order rather than today's rate. The product line and its stock stay untouched, and the return is recorded against that order so the month-end balance still reconciles."}},
+{"@type":"Question","name":"Do I still have to file the DRS return myself?","acceptedAnswer":{"@type":"Answer","text":"Yes. The filing with Re-turn stays with you or your operator. A deposit app calculates the amount and keeps the record; it does not transmit anything to the scheme or submit a statutory return on your behalf."}}
+]}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="brand">Deposit <span>Ledger</span></div>
+    <nav><a href="/">Home</a><a href="/bottle-deposit-apps-compared">Compare apps</a><a href="#waitlist">Join the pilot</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <p class="small">Updated 2026-10-25 · 9 min read</p>
+  <h1>Ireland DRS on Shopify: what to charge, how to refund, how to report</h1>
+
+  <p class="lede">Charge Re-turn's rate per container — €0.15 up to 500 ml, €0.25 up to 3 litres, checked against Re-turn's current table — as a separate non-taxable cart line, refund it by quantity against the original order, and export a monthly collected/refunded/outstanding ledger.</p>
+
+  <p>Since February 2024, every beverage container sold in Ireland has carried a deposit, collected at the point of sale and given back when the container returns through the Re-turn network. Online stores sit inside that system too. Shopify, meanwhile, has no concept of a deposit: it has products, quantities and prices. So the deposit has to be assembled out of those three primitives, and the assembly has to survive a refund nine months later, when nobody remembers which order the bottles came from.</p>
+
+  <p>This page is the operational version — the number to charge, where that number lives on a Shopify order, how a refund works without touching the product, and what reporting actually means at month end. <a href="/">Deposit Ledger</a> is the app I build; where a sentence describes the app rather than the scheme, I say so.</p>
+
+  <h2>What to charge</h2>
+
+  <p>Start from Re-turn's published rate card, not from memory and not from a competitor's product page. Ireland runs two deposit tiers, and the tier is set by container volume, not by what the container holds:</p>
+
+  <table>
+    <thead><tr><th>Container volume</th><th>Deposit per unit</th><th>Confirm against</th></tr></thead>
+    <tbody>
+      <tr><td>150 ml to 500 ml</td><td>€0.15</td><td>Re-turn's current rate card</td></tr>
+      <tr><td>500 ml to 3 litres</td><td>€0.25</td><td>Re-turn's current rate card</td></tr>
+      <tr><td>Containers outside the scheme's list</td><td>€0.00</td><td>Re-turn's current scope list</td></tr>
+    </tbody>
+  </table>
+
+  <p>Treat every cell in that table as a value to confirm rather than a constant to hard-code. The exact boundary at 500 ml, the container materials in scope, and the rates themselves are all defined by the scheme and published by Re-turn — which means they are configuration, not facts about the world. A rate pasted into a product description, a theme snippet, or a metafield somebody edited in 2024 is how a store quietly charges the wrong amount for a year. Keep the rate in one place, date-stamp it, and put a review of it on the calendar for the same week each quarter.</p>
+
+  <div class="note">
+    <p><strong>Ireland, specifically.</strong> The deposit return scheme went live in February 2024 and is operated by Re-turn. The two published deposit levels are €0.15 and €0.25 across the size bands above — confirm the current figures and the current container scope with Re-turn before configuring anything. This page describes how to charge and record a deposit on Shopify. It does not set, interpret, or certify Irish scheme rates.</p>
+  </div>
+
+  <h2>Where the deposit goes on a Shopify order</h2>
+
+  <p>The wrong answer, and the one most stores start with, is a hidden product called <em>Deposit</em> priced at 15 cents with the customer expected to add six of them. It fails in three places: customers don't add line items they don't understand, so you collect on a fraction of orders with no way to prove which; a product is revenue, so it shows up in product sales reports, margin reports and tax reports; and refunding it looks like a product return, which moves stock and stops the refund from being a bottle count.</p>
+
+  <p>The right answer is a separate cart line that carries its own quantity and its own tax setting. There is more than one way to produce that line, and the plan you are on decides which ones are open to you:</p>
+
+  <table>
+    <thead><tr><th>Approach</th><th>Works on</th><th>What you get</th><th>Where it breaks</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Hidden "Deposit" product</strong></td><td>Any plan</td><td>A price on the order</td><td>Under-collection; refunds that move stock; polluted revenue reports</td></tr>
+      <tr><td><strong>Line added by hand</strong></td><td>Any plan</td><td>The correct amount, when you remember</td><td>No audit trail; stops working somewhere around 20 orders a week</td></tr>
+      <tr><td><strong>Cart line added automatically</strong></td><td>Basic, Shopify, Advanced</td><td>Per-container quantity, its own tax flag, refundable by unit</td><td>Needs one rule per container size band</td></tr>
+      <tr><td><strong>Native custom line in checkout</strong></td><td>Shopify Plus only</td><td>A deposit row inside the checkout summary itself</td><td>Requires Plus and a checkout UI extension</td></tr>
+    </tbody>
+  </table>
+
+  <p>Read rows three and four together, because this is where most merchants get stuck. A cart line is available on every plan: it appears in the cart, on the order, in the confirmation email and in the refund screen. A native custom line rendered inside checkout requires Plus plus a checkout UI extension. If you are on Basic, Shopify or Advanced you are not missing a feature — you are using the mechanism Shopify exposes, and it is enough to charge and refund a deposit.</p>
+
+  <h2>How to refund</h2>
+
+  <p>Charging is the easy half. Refunds are where deposit implementations actually break, because a refund has to carry three things at once: a quantity, a rate from the past, and a link to the original order.</p>
+
+  <ul>
+    <li><strong>Find the order and read the count.</strong> The deposit line's quantity is the number of containers sold on that order. That number, not the customer's memory, is the ceiling on what can be refunded.</li>
+    <li><strong>Refund the deposit line only.</strong> Quantity equals containers returned — four of six means 4 × the rate charged. The product line stays untouched: no stock movement, no product return, no reversal against bottle revenue.</li>
+    <li><strong>Use the rate from the original order.</strong> If a rate changed since the sale, a return in November against a July order still gives back July's amount. Reading today's rate here is a small error that compounds across a quarter.</li>
+    <li><strong>Attach the refund to that order.</strong> The link is what lets you answer "did this customer already get their deposit back" without opening a spreadsheet.</li>
+    <li><strong>Write the movement to the ledger with a date.</strong> A refund that isn't in the ledger is a hole in the month-end balance, and holes are what auditors find first.</li>
+  </ul>
+
+  <p>If those five steps take more than two clicks in your current setup, the support queue fills with "I brought the bottles back, where is my money" — and each of those tickets costs more than the deposit it is about.</p>
+
+  <h2>How to report</h2>
+
+  <p>Reporting means one thing operationally: three numbers per period, with the order-level detail behind them. Collected, refunded, outstanding. Everything else — the CSV columns, the customer grouping, the chart — is presentation.</p>
+
+  <div class="cart" role="img" aria-label="Ledger example showing deposits collected, refunded and still held for one month">
+    <div class="row"><span>Deposit collected <span class="muted">October · 4,280 containers</span></span><span>€1,284.00</span></div>
+    <div class="row dep"><span>Refunded on return <span class="muted">October · 1,040 containers</span></span><span>−€312.00</span></div>
+    <div class="row total"><span>Still held</span><span>€972.00</span></div>
+  </div>
+
+  <p>Your accountant wants the movement, not just the closing balance: what came in, what went back out, and what liability is still sitting on the books at the period end. A scheme operator asking questions wants the same figures with order references attached. Neither is served by a filter on the orders page and a manual sum.</p>
+
+  <p>What the ledger is not: it is not a DRS return. Deposit Ledger calculates and records — it does not transmit anything to Re-turn, does not submit a statutory return, and does not stand in for your own filing obligations. The data is yours to export; the filing stays with you or your operator. Any tool that blurs that line is selling you the wrong thing.</p>
+
+  <h2>Is the deposit taxable?</h2>
+
+  <p>Usually not, when the deposit is separately stated on the order and refunded on return — in that shape it behaves like a liability rather than revenue. That is the general treatment, not a ruling on your business, and it is a question for your accountant who can see your registrations and your market mix.</p>
+
+  <p>The practical requirement follows from the answer: the deposit line needs its own tax setting, per market, because a store selling into two deposit markets can need two different answers on the same day. A deposit folded into the product price has no separate tax treatment to carry, which is one more reason not to fold it in.</p>
+
+  <h2>Three configuration mistakes</h2>
+
+  <ul>
+    <li><strong>The rate lives in three places.</strong> A theme snippet, a product description and a metafield, all edited on different days. When the scheme changes a rate you will find two of them. Keep one source and make everything else read from it.</li>
+    <li><strong>Discount codes apply to the deposit.</strong> A 20% code that lands on the deposit line refunds part of a statutory amount, and you are now short at the point of return. Exclude the deposit line from discount eligibility.</li>
+    <li><strong>The period never closes.</strong> If nobody produces collected/refunded/outstanding for October, then by January the outstanding balance is a guess. Close the month on the first working day, even when the number looks boring.</li>
+  </ul>
+
+  <h2>Frequently asked</h2>
+
+  <h3>Do I need Shopify Plus to charge an Irish deposit?</h3>
+  <p>No. A cart-level deposit line works on Basic, Shopify and Advanced, and it carries through to the order and the refund. Custom checkout UI — a deposit row rendered inside the checkout summary — is a Plus feature built with a checkout UI extension, and you do not need it to charge and refund correctly.</p>
+
+  <h3>How do I refund a deposit when a customer brings back four of six bottles?</h3>
+  <p>Refund the deposit line only, quantity four, at the rate charged on the original order. The product line and its stock stay untouched, and the return is recorded against that order, so the month-end balance still reconciles to the container count rather than to a product return.</p>
+
+  <h3>Do I still have to file the DRS return myself?</h3>
+  <p>Yes. The app calculates the deposit and keeps the record; the filing with Re-turn stays with you or your operator. Nothing in the app transmits data to the scheme, and no export from it counts as a statutory submission — it is the working paper behind one.</p>
+
+  <div id="waitlist">
+    <h2>I'm building this</h2>
+    <p>Per-container deposit, separate cart line, refund by quantity, month-end ledger export — for Shopify stores in DRS markets. Five pilot spots, free for three months. If you are comparing what already exists, the <a href="/bottle-deposit-apps-compared">side-by-side comparison of the deposit apps</a> covers the five you will find in the App Store.</p>
+    <p class="small">Replace this block with your Tally form embed, or reply to me in the Shopify Community thread where you found this page.</p>
+  </div>
+
+  <hr>
+  <p class="small">If something on this page is wrong for your market, tell me and I'll correct it. Accuracy is worth more to me than a clean sales pitch. Back to <a href="/">the app</a>.</p>
+
+</main>
+
+<footer class="site">
+  <div class="wrap"><p>Deposit Ledger — a Shopify app for refundable container deposits. <a href="/bottle-deposit-apps-compared">Compare the bottle deposit apps</a>.</p></div>
+</footer>
+
+</body>
+</html>

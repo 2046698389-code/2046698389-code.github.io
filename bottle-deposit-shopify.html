@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How to charge bottle deposits on Shopify (without a fake product)</title>
+<meta name="description" content="Three ways Shopify merchants handle bottle deposits today, what each one costs you, and how to do it correctly: per-container cart line, non-taxable, refunded by quantity, reconciled monthly.">
+<link rel="canonical" href="https://2046698389-code.github.io/bottle-deposit-shopify">
+<link rel="stylesheet" href="/styles.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Do I need Shopify Plus to charge a bottle deposit?","acceptedAnswer":{"@type":"Answer","text":"No. The deposit is added as a cart line and carried through to the order, which works on Basic, Shopify and Advanced. Custom checkout UI requires Plus, but you do not need it to charge and refund a deposit."}},
+{"@type":"Question","name":"Is a bottle deposit taxable?","acceptedAnswer":{"@type":"Answer","text":"In most deposit return markets a refundable deposit is not treated as taxable revenue when it is stated separately and refunded on return. Confirm with your accountant. The app lets you mark the deposit line as non-taxable."}},
+{"@type":"Question","name":"How do I refund a deposit without refunding the product?","acceptedAnswer":{"@type":"Answer","text":"Refund the deposit line only, with quantity equal to the bottles returned. The product line stays untouched, and the return is recorded against the original order so the month-end balance stays correct."}}
+]}
+</script>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap">
+    <div class="brand">Deposit <span>Ledger</span></div>
+    <nav><a href="/">Home</a><a href="#waitlist">Join the pilot</a></nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <p class="small">Updated 2026-10-25 · 8 min read</p>
+  <h1>How to charge bottle deposits on Shopify (without a fake product)</h1>
+
+  <p class="lede">Short answer: don't create a "Deposit" product. Add the deposit as its own cart line, per container, marked non-taxable — then refund it by quantity against the original order. The refund side is the part that actually breaks, not the charging side.</p>
+
+  <p>If you sell glass bottles or cans in Ireland, the Netherlands, Germany, California, British Columbia or Singapore, you're required to charge a deposit per container and give it back when the container comes back. Shopify has no concept of a deposit: it has products, quantities and prices. So every merchant improvises, and all of them improvise the same way — badly.</p>
+
+  <h2>Why the fake product breaks</h2>
+
+  <p>The standard workaround is a product called <em>Deposit</em> priced at €0.15, hidden from collections, with the customer expected to add six of them. It fails in three places, and only the first one is obvious.</p>
+
+  <p><strong>1. It doesn't get collected.</strong> Customers don't add line items they don't understand. You end up collecting on a fraction of orders, and you can't prove which ones. In a market where the deposit is mandatory, that's not a revenue problem — it's a compliance problem with no paper trail.</p>
+
+  <p><strong>2. It pollutes your numbers.</strong> A fake product is revenue. It shows up in product sales reports, in your conversion metrics, in your inventory count if anyone forgets to disable tracking, and in your tax report unless you remember to flag it every time.</p>
+
+  <p><strong>3. It can't be refunded correctly.</strong> This is the one that actually costs you hours. A customer brings back four of six bottles, three weeks later. You need to refund 4 × €0.15 and leave the product alone. On a fake product line, that refund looks like a product return: stock moves, the report shows a returned item, and nothing links the refund back to the bottle count.</p>
+
+  <h2>The three approaches, and what each one costs</h2>
+
+  <table>
+    <thead><tr><th>Approach</th><th>Works until</th><th>What it costs you</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Fake product</strong></td><td>Never, really</td><td>Under-collection, polluted reports, refunds that corrupt stock</td></tr>
+      <tr><td><strong>Manual line on the order</strong></td><td>~20 orders/week</td><td>A spreadsheet to remember who still owes bottles, and no audit trail</td></tr>
+      <tr><td><strong>Cart-level automation</strong></td><td>Scales</td><td>Setup time; you need the rule and the ledger, not just the fee</td></tr>
+    </tbody>
+  </table>
+
+  <p>The third option is what apps in this category do. The difference between a good one and a bad one is never the fee calculation — it's what happens after the order.</p>
+
+  <h2>What "correct" looks like</h2>
+
+  <h3>1. The cart line</h3>
+  <p>Six bottles, one deposit line, quantity equal to the container count, price per container. It should be visible in the cart, in checkout, on the order, and in the confirmation email — because the customer has to know they paid it in order to come back for it.</p>
+
+  <div class="cart" role="img" aria-label="Cart showing six bottles and a separate deposit line">
+    <div class="row"><span>Hazy IPA 330ml <span class="muted">× 6</span></span><span>€24.00</span></div>
+    <div class="row dep"><span>Bottle deposit <span class="muted">× 6</span></span><span>€0.90</span></div>
+    <div class="row total"><span>Total</span><span>€24.90</span></div>
+  </div>
+
+  <h3>2. The tax treatment</h3>
+  <p>A refundable deposit is normally not taxable revenue when it is separately stated and refunded on return. That means the deposit line needs to be able to carry its own tax setting — non-taxable by default, taxable if your accountant says so for your market.</p>
+
+  <h3>3. The refund</h3>
+  <p>Partial, by quantity, against the original order, without touching the product line. If you can't do that in two clicks, your support inbox fills up with "I returned the bottles, where's my money".</p>
+
+  <h3>4. The ledger</h3>
+  <p>Three numbers, per customer and per period: collected, refunded, outstanding. This is what your accountant needs at month end and what a scheme operator asks for when they audit you. If you can't produce it, the rest doesn't matter.</p>
+
+  <div class="note">
+    <p><strong>Ireland, specifically.</strong> The deposit return scheme went live in February 2024, operated by Re-turn. The deposit is €0.15 for containers between 150 ml and 500 ml and €0.25 for containers between 500 ml and 3 litres. Rates and scope are set by the scheme, not by Shopify — check Re-turn's current published rates before you configure anything, and don't hard-code them into a product description.</p>
+  </div>
+
+  <h2>Why the deposit has to stay out of the product price</h2>
+
+  <p>It's tempting to just raise the bottle price by 15 cents and refund it manually. Three things go wrong: the customer can't see what they're getting back, so they don't return the bottle; your revenue per unit changes, which distorts every margin report you have; and when the rate changes — and it will — you have to reprice every SKU instead of editing one rule.</p>
+
+  <h2>Frequently asked</h2>
+
+  <h3>Do I need Shopify Plus?</h3>
+  <p>No. A cart-level deposit line works on Basic, Shopify and Advanced. Custom checkout UI (checkout extensions) is Plus-only, but you don't need it to charge and refund a deposit.</p>
+
+  <h3>Is the deposit taxable?</h3>
+  <p>Usually not, when it's separately stated and refundable — but this is a question for your accountant, not for an app. Make sure whatever you use lets you set it per market.</p>
+
+  <h3>How do I refund without refunding the product?</h3>
+  <p>Refund the deposit line item only, with the quantity set to the number of containers returned. The product line and its stock stay untouched, and the return gets recorded against the original order.</p>
+
+  <div id="waitlist">
+    <h2>I'm building this</h2>
+    <p>Per-container deposit, separate cart line, refund by quantity, month-end ledger export — for Shopify stores in DRS markets. Five pilot spots, free for three months.</p>
+    <p class="small">Replace this block with your Tally form embed, or reply to me in the Shopify Community thread where you found this page.</p>
+  </div>
+
+  <hr>
+  <p class="small">If something on this page is wrong for your market, tell me and I'll correct it. Accuracy is worth more to me than a clean sales pitch.</p>
+
+</main>
+
+<footer class="site">
+  <div class="wrap"><p>Deposit Ledger — a Shopify app for refundable container deposits.</p></div>
+</footer>
+
+</body>
+</html>
